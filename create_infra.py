@@ -89,7 +89,8 @@ def create_redshift_cluster(roleArn):
             ClusterIdentifier=CLUSTER_IDENTIFIER,
             MasterUsername=DB_USER,
             MasterUserPassword=DB_PASSWORD,
-            IamRoles=[roleArn]
+            IamRoles=[roleArn],
+            AutomatedSnapshotRetentionPeriod=0  # Disable automated snapshots
         )
         print("Redshift cluster created")
     except ClientError as e:

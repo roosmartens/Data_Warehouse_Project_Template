@@ -1,4 +1,4 @@
 test.ipynb
 dwh.cfg
 .venv
-dwh.cfg
+__pycache__
