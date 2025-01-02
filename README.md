@@ -64,7 +64,7 @@ Below is an explanation of the distribution strategies and key choices for the s
     - **Reason**: Similar to the events table, an even distribution is chosen to ensure balanced data distribution.
 
 ### Fact table
-- **songplay_table**:
+- **songplays_table**:
     - **Distribution style**: KEY 
     - **Distribution key**: `song_id`
     - **Reason**: `song_id` is frequently used in join queries, making it an optimal choice for the distribution key.
@@ -72,18 +72,18 @@ Below is an explanation of the distribution strategies and key choices for the s
     - **Reason**: `start_time` is often used in the WHERE clause, making it an efficient choice for the sort key.
 
 ### Dimension tables
-- **user_table**: 
+- **users_table**: 
     - **Distribution style**: ALL
     - **Reason**: The user table is relatively small, so distributing it to all nodes ensures fast access.
     
-- **song_table**: 
+- **songs_table**: 
     - **Distribution style**: KEY 
     - **Distribution key**: `song_id`
     - **Reason**: `song_id` is frequently used in join queries, making it an optimal choice for the distribution key.
     - **Sort key**: `year`
     - **Reason**: `year` is often used in the WHERE clause, making it an efficient choice for the sort key.
 
-- **artist_table**: 
+- **artists_table**: 
     - **Distribution style**: KEY 
     - **Distribution key**: `artist_id`
     - **Reason**: `artist_id` is frequently used in join queries, but less often than `song_id`.
@@ -174,7 +174,7 @@ ORDER BY user_count DESC;
 ### Daily song plays
 ```sql
 SELECT t.start_time::date as play_date, COUNT(*) as play_count
-FROM songplay sp
+FROM songplays sp
 JOIN time t ON sp.start_time = t.start_time
 GROUP BY play_date
 ORDER BY play_date;
@@ -183,7 +183,7 @@ ORDER BY play_date;
 ### Most active users
 ```sql
 SELECT u.user_id, u.first_name, u.last_name, COUNT(*) as play_count
-FROM songplay sp
+FROM songplays sp
 JOIN users u ON sp.user_id = u.user_id
 GROUP BY u.user_id, u.first_name, u.last_name
 ORDER BY play_count DESC
@@ -193,9 +193,9 @@ LIMIT 10;
 ### Songs played by each user
 ```sql
 SELECT u.user_id, u.first_name, u.last_name, s.title
-FROM songplay sp
+FROM songplays sp
 JOIN users u ON sp.user_id = u.user_id
-JOIN song s ON sp.song_id = s.song_id
+JOIN songs s ON sp.song_id = s.song_id
 ORDER BY u.user_id, s.title;
 ```
 
