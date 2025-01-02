@@ -163,14 +163,6 @@ ORDER BY play_count DESC
 LIMIT 10;
 ```
 
-### Number of users by subscription level
-```sql
-SELECT level, COUNT(*) as user_count
-FROM users
-GROUP BY level
-ORDER BY user_count DESC;
-```
-
 ### Daily song plays
 ```sql
 SELECT t.start_time::date as play_date, COUNT(*) as play_count
