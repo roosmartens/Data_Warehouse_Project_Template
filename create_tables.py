@@ -4,6 +4,13 @@ from sql_queries import create_table_queries, drop_table_queries
 
 
 def drop_tables(cur, conn):
+    """
+    Drop tables if they exist
+    
+    Args:
+    cur: cursor object
+    conn: connection object
+    """
     for query in drop_table_queries:
         print(query)
         cur.execute(query)
@@ -12,6 +19,13 @@ def drop_tables(cur, conn):
 
 
 def create_tables(cur, conn):
+    """
+    Create tables
+    
+    Args:
+    cur: cursor object
+    conn: connection object
+    """
     for query in create_table_queries:
         print(query)
         cur.execute(query)
@@ -20,6 +34,9 @@ def create_tables(cur, conn):
 
 
 def main():
+    """
+    Main function to drop and create tables
+    """
     config = configparser.ConfigParser()
     config.read('dwh.cfg')
 

@@ -30,12 +30,18 @@ iam = boto3.client('iam', aws_access_key_id=AWS_KEY, aws_secret_access_key=AWS_S
 redshift = boto3.client('redshift', aws_access_key_id=AWS_KEY, aws_secret_access_key=AWS_SECRET, region_name=REGION)
 
 def delete_infra():
+    """
+    Start delete_infra.py script to clean up the infrastructure
+    """
     try:
         subprocess.run(["python", "delete_infra.py"], check=True)
     except subprocess.CalledProcessError as e:
         print(f"Failed to execute delete_infra.py: {e}")
 
 def create_IAM_role():
+    """
+    Create an IAM role
+    """
     try:
         print("Creating a new IAM Role")
         iam.create_role(
@@ -57,6 +63,9 @@ def create_IAM_role():
         raise
 
 def attach_policy():
+    """
+    Attach the necessary policy to the IAM role
+    """
     try:
         print("Attaching Policy")
         iam.attach_role_policy(
@@ -69,6 +78,12 @@ def attach_policy():
         raise
 
 def get_IAM_role_arn():
+    """
+    Get the IAM role ARN
+
+    Returns:
+        roleArn: IAM role ARN
+    """
     try:
         print("Getting the IAM role ARN")
         roleArn = iam.get_role(RoleName=IAM_ROLE_NAME)['Role']['Arn']
@@ -79,6 +94,11 @@ def get_IAM_role_arn():
         raise
 
 def create_redshift_cluster(roleArn):
+    """
+    Create a Redshift cluster
+    Args:
+        roleArn: IAM role ARN
+    """
     try:
         print("Creating a new Redshift cluster")
         response = redshift.create_cluster(
@@ -98,6 +118,21 @@ def create_redshift_cluster(roleArn):
         raise
 
 def main():
+    """
+    Main function to set up the infrastructure for the data warehouse project.
+    This function performs the following steps:
+    1. Creates an IAM role.
+    2. Attaches the necessary policy to the IAM role.
+    3. Retrieves the IAM role ARN.
+    4. Creates a Redshift cluster using the IAM role ARN.
+    5. Waits for the Redshift cluster to become available.
+    6. Retrieves the cluster endpoint and role ARN.
+    7. Displays the cluster properties.
+    8. Updates the configuration file (dwh.cfg) with the new cluster endpoint and role ARN.
+    If any exception occurs during the process, it prints the exception message and starts the delete_infra.py script to clean up the infrastructure.
+    Raises:
+        Exception: If any error occurs during the infrastructure setup process.
+    """
     try:
         # Create IAM Role
         create_IAM_role()
